@@ -1,3 +1,5 @@
+import React from "react";
+
 function TaskCard({
   note,
   prevColEn,
@@ -8,28 +10,15 @@ function TaskCard({
   onAddLabel,
   onDelete,
   onUpdate,
+  onMove,
 }) {
   return (
-    <div className="taskCard">
+    <div className="taskCard" style={{ border: "1px solid #ccc", padding: "10px", margin: "10px 0", borderRadius: "5px", backgroundColor: "#fff" }}>
       <p>
         <strong>Title:</strong> {note.title}
       </p>
-
-      {/* Other task parameters (plain text) */}
-      <p>
-        <strong>ID:</strong> {note.id}
-      </p>
       <p>
         <strong>Description:</strong> {note.description}
-      </p>
-      <p>
-        <strong>Column:</strong> {colEn}
-      </p>
-      <p>
-        <strong>Previous Column:</strong> {prevColEn ?? "None"}
-      </p>
-      <p>
-        <strong>Next Column:</strong> {nextColEn ?? "None"}
       </p>
       <p>
         <strong>Labels:</strong> {note.labels?.join(", ") || "None"}
@@ -41,7 +30,25 @@ function TaskCard({
         <strong>Created At:</strong> {note.createdAt}
       </p>
 
-      <button type="button" className="cancel-btn" onClick={onDelete}>
+      {/* Movement Buttons */}
+      <div className="card-actions" style={{ display: "flex", justifyContent: "space-between", margin: "10px 0" }}>
+        <button 
+          onClick={() => onMove(prevColEn)} 
+          disabled={!prevColEn}
+          title="Move Left"
+        >
+          &larr; Move
+        </button>
+        <button 
+          onClick={() => onMove(nextColEn)} 
+          disabled={!nextColEn}
+          title="Move Right"
+        >
+          Move &rarr;
+        </button>
+      </div>
+
+      <button type="button" className="cancel-btn" onClick={onDelete} style={{ color: "red", width: "100%", marginTop: "5px" }}>
         ✖ Delete
       </button>
     </div>
