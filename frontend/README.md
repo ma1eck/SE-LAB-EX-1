@@ -16,6 +16,12 @@ Install dependencies:
 npm install
 ```
 
+Use an npm mirror if you face internet issues:
+
+```bash
+npm config set registry https://package-mirror.liara.ir/repository/npm/ --global
+```
+
 Start the development server:
 
 ```bash
