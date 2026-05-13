@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import Column from "./Column";
 import Header from "./Header";
-import AddColumn from "./AddColumn";
+// import AddColumn from "./AddColumn";
 
 function App() {
   const [labels, setLabels] = useState(["Bug", "Feature", "Improvement"]);
-  
+
   const [columns, setColumns] = useState([
     { id: "todo", name: "To Do" },
     { id: "inprogress", name: "In Progress" },
@@ -36,7 +36,7 @@ function App() {
         <Header filter={filter} setFilter={setFilter} />
         {/* TODO: Implement filtering logic to only show notes matching the filter state */}
       </header>
-      
+
       <main>
         <div className="row">
           {columns.map((col) => (
@@ -52,7 +52,7 @@ function App() {
             />
           ))}
         </div>
-        
+
         <AddColumn setColumns={setColumns} />
       </main>
 
