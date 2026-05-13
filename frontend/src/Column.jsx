@@ -6,12 +6,18 @@ function Column({
   notes,
   setNotes,
   labels,
+  columns,
   confirmDeleteCol,
   handleAddNote,
   handleMoveNote,
 }) {
-  // Filter notes that belong to this column
   const filteredNotes = notes.filter((n) => n.type === colEn);
+
+  // Derive prev/next column IDs from the ordered columns array
+  const colIndex = columns.findIndex((c) => c.id === colEn);
+  const prevColEn = colIndex > 0 ? columns[colIndex - 1].id : null;
+  const nextColEn =
+    colIndex < columns.length - 1 ? columns[colIndex + 1].id : null;
 
   function updateNote(id, updater) {
     setNotes((prev) => prev.map((n) => (n.id === id ? updater(n) : n)));
@@ -21,8 +27,13 @@ function Column({
     setNotes((prev) => prev.filter((n) => n.id !== id));
   }
 
-  function addLabel(label) {
-    // You may want custom logic here
+  function addLabel(noteId, label) {
+    updateNote(noteId, (n) => ({
+      ...n,
+      labels: n.labels?.includes(label)
+        ? n.labels
+        : [...(n.labels ?? []), label],
+    }));
   }
 
   return (
@@ -34,18 +45,17 @@ function Column({
         </button>
       </div>
 
-      {/* Render TaskCards here */}
       <div className="notes-container">
         {filteredNotes.map((note) => (
           <TaskCard
             key={note.id}
             note={note}
-            prevColEn={null} // You can fix this logic later
+            prevColEn={prevColEn}
             colEn={colEn}
-            nextColEn={null} // You can fix this logic later
-            columns={[]} // If needed later
+            nextColEn={nextColEn}
+            columns={columns}
             labels={labels}
-            onAddLabel={addLabel}
+            onAddLabel={(label) => addLabel(note.id, label)}
             onDelete={() => deleteNote(note.id)}
             onUpdate={(updater) => updateNote(note.id, updater)}
           />

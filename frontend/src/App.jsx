@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import Column from "./Column";
 import Header from "./Header";
-// import AddColumn from "./AddColumn";
+import AddColumn from "./AddColumn";
 
 function App() {
   const [labels, setLabels] = useState(["Bug", "Feature", "Improvement"]);
@@ -12,7 +12,45 @@ function App() {
     { id: "done", name: "Done" },
   ]);
 
-  const [notes, setNotes] = useState([]);
+  const [notes, setNotes] = useState([
+    {
+      id: "n1",
+      title: "Fix login bug",
+      description: "User cannot log in with Google OAuth.",
+      type: "todo",
+      labels: ["Bug"],
+      priority: "High",
+      createdAt: "2026-05-10",
+    },
+    {
+      id: "n2",
+      title: "Add dark mode",
+      description: "Implement theme switcher UI.",
+      type: "inprogress",
+      labels: ["Feature"],
+      priority: "Medium",
+      createdAt: "2026-05-11",
+    },
+    {
+      id: "n3",
+      title: "Optimize dashboard load time",
+      description: "Reduce API calls and caching improvements.",
+      type: "inprogress",
+      labels: ["Improvement"],
+      priority: "Low",
+      createdAt: "2026-05-09",
+    },
+    {
+      id: "n4",
+      title: "Refactor task-card component",
+      description: "Clean old props and unused hooks.",
+      type: "done",
+      labels: ["Improvement"],
+      priority: "Low",
+      createdAt: "2026-05-05",
+    },
+  ]);
+
   const [filter, setFilter] = useState("");
 
   // TODO: Implement localStorage hook or useEffect to save/load notes and columns
@@ -44,11 +82,12 @@ function App() {
               key={col.id}
               name={col.name}
               colEn={col.id}
-              notes={notes} // TODO: Pass filtered notes here instead of all notes
+              notes={notes}
               setNotes={setNotes}
               labels={labels}
+              columns={columns}
               confirmDeleteCol={() => confirmDeleteCol(col.id)}
-              // TODO: Pass handleAddNote and handleMoveNote to Column component
+              handleAddNote={() => handleAddNote(col.id)}
             />
           ))}
         </div>
