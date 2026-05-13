@@ -1,55 +1,56 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import Header from "./Header";
 import Column from "./Column";
-import LightDark from "./LightDark";
-
-const PRIORITY_ORDER = { High: 0, Medium: 1, Low: 2 };
 
 function App() {
-  const [filter, setFilter] = useState("");
-  const [sortBy, setSortBy] = useState("");
+  // TODO: Implement localStorage to persist columns, notes, and labels across page reloads.
 
-  const initialColumns = [
+  const [filter, setFilter] = useState("");
+
+  const [columns, setColumns] = useState([
     { id: "todo", name: "To Do" },
     { id: "inProgress", name: "In Progress" },
     { id: "done", name: "Done" },
-  ];
+  ]);
 
-  const [columns, setColumns] = useState(() => {
-    const saved = localStorage.getItem("columns");
-    return saved ? JSON.parse(saved) : initialColumns;
-  });
+  const [notes, setNotes] = useState([
+    {
+      id: "1",
+      type: "todo", // matches column id
+      title: "Sample Task",
+      description: "This is a sample description.",
+      labels: ["Feature"],
+      priority: "Medium",
+      createdAt: new Date().toLocaleDateString(),
+    },
+  ]);
 
-  const [notes, setNotes] = useState(() => {
-    const saved = JSON.parse(localStorage.getItem("notes") || "[]");
-    return saved.filter((n) => typeof n === "object" && n !== null && n.id);
-  });
+  const [labels, setLabels] = useState([
+    "Bug",
+    "Feature",
+    "Enhancement",
+    "Documentation",
+  ]);
 
-  const [labels] = useState(["Bug", "Feature", "Enhancement", "Documentation"]);
-
-  useEffect(() => {
-    localStorage.setItem("notes", JSON.stringify(notes));
-  }, [notes]);
-  useEffect(() => {
-    localStorage.setItem("columns", JSON.stringify(columns));
-  }, [columns]);
+  // --- Functions ---
 
   const handleAddNote = (colId) => {
     const title = prompt("Enter task title:");
     if (!title) return;
+
     const description = prompt("Enter task description:") || "";
-    setNotes((prev) => [
-      ...prev,
-      {
-        id: Date.now().toString(),
-        type: colId,
-        title,
-        description,
-        labels: [],
-        priority: "Low",
-        createdAt: new Date().toLocaleDateString(),
-      },
-    ]);
+
+    const newNote = {
+      id: Date.now().toString(),
+      type: colId,
+      title,
+      description,
+      labels: [],
+      priority: "Low",
+      createdAt: new Date().toLocaleDateString(),
+    };
+
+    setNotes((prev) => [...prev, newNote]);
   };
 
   const handleMoveNote = (noteId, targetColId) => {
@@ -62,24 +63,23 @@ function App() {
   };
 
   const confirmDeleteCol = (colId) => {
-    if (window.confirm("Delete this column and all its tasks?")) {
+    if (
+      window.confirm(
+        "Are you sure you want to delete this column and all its tasks?",
+      )
+    ) {
       setColumns((prev) => prev.filter((col) => col.id !== colId));
       setNotes((prev) => prev.filter((note) => note.type !== colId));
     }
   };
 
-  const displayedNotes = notes
-    .filter(
-      (note) =>
-        note?.title?.toLowerCase().includes(filter.toLowerCase()) ||
-        note?.description?.toLowerCase().includes(filter.toLowerCase()),
-    )
-    .sort((a, b) => {
-      if (sortBy === "title") return a.title.localeCompare(b.title);
-      if (sortBy === "priority")
-        return PRIORITY_ORDER[a.priority] - PRIORITY_ORDER[b.priority];
-      return 0;
-    });
+  // TODO: Add advanced filtering and sorting mechanisms.
+  // Apply text search filter to notes
+  const displayedNotes = notes.filter(
+    (note) =>
+      note.title.toLowerCase().includes(filter.toLowerCase()) ||
+      note.description.toLowerCase().includes(filter.toLowerCase()),
+  );
 
   return (
     <div
@@ -90,13 +90,10 @@ function App() {
         minHeight: "100vh",
       }}
     >
-      <LightDark />
-      <Header
-        filter={filter}
-        setFilter={setFilter}
-        sortBy={sortBy}
-        setSortBy={setSortBy}
-      />
+      <Header filter={filter} setFilter={setFilter} />
+
+      {/* TODO: Add a button/UI to create new columns dynamically */}
+
       <main
         className="board"
         style={{
@@ -131,6 +128,8 @@ function App() {
           </div>
         ))}
       </main>
+
+      {/* TODO: Make footer links or layout more personalized later */}
       <footer
         style={{
           textAlign: "center",
