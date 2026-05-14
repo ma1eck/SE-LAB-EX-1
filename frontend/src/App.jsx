@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Header from "./Header";
 import Column from "./Column";
+import LightDark from "./LightDark";
 
 const PRIORITY_ORDER = { High: 0, Medium: 1, Low: 2 };
 
@@ -101,6 +102,7 @@ function App() {
         minHeight: "100vh",
       }}
     >
+      <LightDark />
       <Header
         filter={filter}
         setFilter={setFilter}
