@@ -18,10 +18,19 @@ function Column({
   // Derive prev/next column IDs from the ordered columns array
   const colIndex = columns.findIndex((c) => c.id === colEn);
   const prevColEn = colIndex > 0 ? columns[colIndex - 1].id : null;
-  const nextColEn = colIndex < columns.length - 1 ? columns[colIndex + 1].id : null;
+  const nextColEn =
+    colIndex < columns.length - 1 ? columns[colIndex + 1].id : null;
 
   function updateNote(id, updater) {
-    setNotes((prev) => prev.map((n) => (n.id === id ? updater(n) : n)));
+    setNotes((prev) =>
+      prev.map((n) =>
+        n.id === id
+          ? typeof updater === "function"
+            ? updater(n)
+            : updater
+          : n,
+      ),
+    );
   }
 
   function deleteNote(id) {
@@ -41,7 +50,11 @@ function Column({
     <div className="column" data-col={colEn}>
       <div className="col-header">
         <h2>{name}</h2>
-        <button className="cancel-btn" onClick={confirmDeleteCol} title="Delete Column">
+        <button
+          className="cancel-btn"
+          onClick={confirmDeleteCol}
+          title="Delete Column"
+        >
           ✖
         </button>
       </div>

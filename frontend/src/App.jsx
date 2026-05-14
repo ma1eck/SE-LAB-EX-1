@@ -20,20 +20,8 @@ function App() {
   });
 
   const [notes, setNotes] = useState(() => {
-    const saved = localStorage.getItem("notes");
-    return saved
-      ? JSON.parse(saved)
-      : [
-          {
-            id: "1",
-            type: "todo",
-            title: "Sample Task",
-            description: "This is a sample description.",
-            labels: ["Feature"],
-            priority: "Medium",
-            createdAt: new Date().toLocaleDateString(),
-          },
-        ];
+    const saved = JSON.parse(localStorage.getItem("notes") || "[]");
+    return saved.filter((n) => typeof n === "object" && n !== null && n.id);
   });
 
   const [labels] = useState(["Bug", "Feature", "Enhancement", "Documentation"]);
@@ -82,8 +70,8 @@ function App() {
   const displayedNotes = notes
     .filter(
       (note) =>
-        note.title.toLowerCase().includes(filter.toLowerCase()) ||
-        note.description.toLowerCase().includes(filter.toLowerCase()),
+        note?.title?.toLowerCase().includes(filter.toLowerCase()) ||
+        note?.description?.toLowerCase().includes(filter.toLowerCase()),
     )
     .sort((a, b) => {
       if (sortBy === "title") return a.title.localeCompare(b.title);
