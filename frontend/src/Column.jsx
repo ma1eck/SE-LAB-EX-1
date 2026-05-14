@@ -47,7 +47,18 @@ function Column({
   }
 
   return (
-    <div className="column" data-col={colEn}>
+    <div
+      className="column"
+      data-col={colEn}
+      onDragOver={(e) => e.preventDefault()}
+      onDrop={(e) => {
+        e.preventDefault();
+        const noteId = e.dataTransfer.getData("text/plain");
+        if (noteId) {
+          handleMoveNote(noteId, colEn);
+        }
+      }}
+    >
       <div className="col-header">
         <h2>{name}</h2>
         <button

@@ -28,6 +28,7 @@ export default function TaskCard({ note, onUpdate, onDelete }) {
     boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
     backgroundColor: "white",
     maxWidth: "400px",
+    cursor: isEditing ? "default" : "grab",
   };
 
   function handleSave() {
@@ -49,7 +50,13 @@ export default function TaskCard({ note, onUpdate, onDelete }) {
   }
 
   return (
-    <div style={cardStyle}>
+    <div
+      style={cardStyle}
+      draggable={!isEditing}
+      onDragStart={(e) => {
+        e.dataTransfer.setData("text/plain", note.id);
+      }}
+    >
       {!isEditing && (
         <>
           <h3>{note.title}</h3>
