@@ -109,3 +109,27 @@ code {
   padding: 4px 8px;
   background: var(--code-bg);
 }
+/* index.css */
+
+html.light {
+  --bg-color: #ffffff;
+  --text-color: #222222;
+  --card-color: #f3f3f3;
+}
+
+html.dark {
+  --bg-color: #121212;
+  --text-color: #f5f5f5;
+  --card-color: #1e1e1e;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  transition: background-color 0.2s ease;
+}
+
+.taskCard {
+  background-color: var(--card-color);
+}
