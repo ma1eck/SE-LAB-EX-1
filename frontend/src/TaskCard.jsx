@@ -1,25 +1,22 @@
 import React,{useState} from "react";
 
-export default function TaskCard({note,onUpdate,onDelete,onMove,columns}){
+export default function TaskCard({note,onUpdate,onDelete}){
 
 const [editing,setEditing]=useState(false);
 const [edited,setEdited]=useState({...note});
 
-const index=columns.findIndex(c=>c.id===note.type);
-
-const moveLeft=()=>{
-if(index>0)
-onMove(note.id,columns[index-1].id);
-};
-
-const moveRight=()=>{
-if(index<columns.length-1)
-onMove(note.id,columns[index+1].id);
-};
-
 const save=()=>{
 onUpdate(edited);
 setEditing(false);
+};
+
+const dragStart=e=>{
+e.dataTransfer.setData("taskId",note.id);
+};
+
+const isOverdue=()=>{
+if(!note.deadline) return false;
+return new Date(note.deadline)<new Date();
 };
 
 if(editing){
@@ -40,6 +37,16 @@ value={edited.description}
 onChange={e=>setEdited({...edited,description:e.target.value})}
 />
 
+<select
+className="edit-input"
+value={edited.priority}
+onChange={e=>setEdited({...edited,priority:e.target.value})}
+>
+<option value="high">High</option>
+<option value="medium">Medium</option>
+<option value="low">Low</option>
+</select>
+
 <input
 type="date"
 className="edit-input"
@@ -49,8 +56,8 @@ onChange={e=>setEdited({...edited,deadline:e.target.value})}
 
 <textarea
 className="edit-input"
-value={edited.notes||""}
 placeholder="Notes"
+value={edited.notes||""}
 onChange={e=>setEdited({...edited,notes:e.target.value})}
 />
 
@@ -76,7 +83,11 @@ Cancel
 
 return(
 
-<div className="task-card">
+<div
+className="task-card"
+draggable
+onDragStart={dragStart}
+>
 
 <h4 className="task-title">
 {note.title}
@@ -86,37 +97,23 @@ return(
 {note.description}
 </p>
 
-{note.deadline &&
-<div className="task-meta">
+<div className={`priority priority-${note.priority}`}>
+{note.priority}
+</div>
+
+{note.deadline &&(
+
+<div className={`task-meta ${isOverdue()?"deadline-overdue":""}`}>
 Deadline: {note.deadline}
 </div>
-}
 
-{note.notes &&
+)}
+
+{note.notes &&(
 <div className="task-meta">
 Notes: {note.notes}
 </div>
-}
-
-<div className="move-arrows">
-
-<button
-className="arrow-btn"
-onClick={moveLeft}
-disabled={index===0}
->
-←
-</button>
-
-<button
-className="arrow-btn"
-onClick={moveRight}
-disabled={index===columns.length-1}
->
-→
-</button>
-
-</div>
+)}
 
 <div className="card-actions">
 
