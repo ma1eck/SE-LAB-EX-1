@@ -1,123 +1,143 @@
-import React, { useState } from "react";
-import pencilSvg from "./assets/icons/pencil.svg";
+import React,{useState} from "react";
 
-export default function TaskCard({ note, onUpdate, onDelete }) {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedTask, setEditedTask] = useState({
-    title: note.title || "",
-    dueDate: note.dueDate || "",
-    description: note.description || "",
-  });
+export default function TaskCard({note,onUpdate,onDelete,onMove,columns}){
 
-  const editButtonStyle = {
-    position: "absolute",
-    top: "10px",
-    right: "10px",
-    border: "none",
-    background: "transparent",
-    cursor: "pointer",
-    padding: 0,
-  };
+const [editing,setEditing]=useState(false);
+const [edited,setEdited]=useState({...note});
 
-  const cardStyle = {
-    position: "relative",
-    border: "1px solid #ccc",
-    borderRadius: "6px",
-    padding: "16px",
-    marginBottom: "12px",
-    boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-    backgroundColor: "white",
-    maxWidth: "400px",
-    cursor: isEditing ? "default" : "grab",
-  };
+const index=columns.findIndex(c=>c.id===note.type);
 
-  function handleSave() {
-    // FIX: Pass only the updated object, NOT the note.id as the first argument
-    onUpdate({
-      ...note,
-      ...editedTask,
-    });
-    setIsEditing(false);
-  }
+const moveLeft=()=>{
+if(index>0)
+onMove(note.id,columns[index-1].id);
+};
 
-  function handleCancel() {
-    setEditedTask({
-      title: note.title || "",
-      dueDate: note.dueDate || "",
-      description: note.description || "",
-    });
-    setIsEditing(false);
-  }
+const moveRight=()=>{
+if(index<columns.length-1)
+onMove(note.id,columns[index+1].id);
+};
 
-  return (
-    <div
-      style={cardStyle}
-      draggable={!isEditing}
-      onDragStart={(e) => {
-        e.dataTransfer.setData("text/plain", note.id);
-      }}
-    >
-      {!isEditing && (
-        <>
-          <h3>{note.title}</h3>
-          <p>
-            <strong>Due Date:</strong> {note.dueDate}
-          </p>
-          <p>{note.description}</p>
+const save=()=>{
+onUpdate(edited);
+setEditing(false);
+};
 
-          <button
-            onClick={() => setIsEditing(true)}
-            aria-label="Edit task"
-            title="Edit task"
-            style={editButtonStyle}
-          >
-            <img src={pencilSvg} alt="Edit" width={18} height={18} />
-          </button>
-        </>
-      )}
+if(editing){
 
-      {isEditing && (
-        <>
-          <input
-            type="text"
-            value={editedTask.title}
-            onChange={(e) =>
-              setEditedTask((prev) => ({ ...prev, title: e.target.value }))
-            }
-            placeholder="Title"
-            style={{ width: "100%", marginBottom: "8px", fontSize: "16px" }}
-          />
-          <input
-            type="date"
-            value={editedTask.dueDate}
-            onChange={(e) =>
-              setEditedTask((prev) => ({ ...prev, dueDate: e.target.value }))
-            }
-            style={{ width: "100%", marginBottom: "8px", fontSize: "16px" }}
-          />
-          <textarea
-            value={editedTask.description}
-            onChange={(e) =>
-              setEditedTask((prev) => ({
-                ...prev,
-                description: e.target.value,
-              }))
-            }
-            placeholder="Description"
-            rows={4}
-            style={{ width: "100%", fontSize: "14px" }}
-          />
+return(
 
-          <div style={{ marginTop: "10px", display: "flex", gap: "10px" }}>
-            <button onClick={handleSave} style={{ cursor: "pointer" }}>
-              Save
-            </button>
-            <button onClick={handleCancel} style={{ cursor: "pointer" }}>
-              Cancel
-            </button>
-          </div>
-        </>
-      )}
-    </div>
-  );
+<div className="task-card">
+
+<input
+className="edit-input"
+value={edited.title}
+onChange={e=>setEdited({...edited,title:e.target.value})}
+/>
+
+<textarea
+className="edit-input"
+value={edited.description}
+onChange={e=>setEdited({...edited,description:e.target.value})}
+/>
+
+<input
+type="date"
+className="edit-input"
+value={edited.deadline||""}
+onChange={e=>setEdited({...edited,deadline:e.target.value})}
+/>
+
+<textarea
+className="edit-input"
+value={edited.notes||""}
+placeholder="Notes"
+onChange={e=>setEdited({...edited,notes:e.target.value})}
+/>
+
+<div className="card-actions">
+
+<button className="icon-btn" onClick={save}>
+Save
+</button>
+
+<button
+className="icon-btn"
+onClick={()=>setEditing(false)}
+>
+Cancel
+</button>
+
+</div>
+
+</div>
+
+);
+}
+
+return(
+
+<div className="task-card">
+
+<h4 className="task-title">
+{note.title}
+</h4>
+
+<p className="task-description">
+{note.description}
+</p>
+
+{note.deadline &&
+<div className="task-meta">
+Deadline: {note.deadline}
+</div>
+}
+
+{note.notes &&
+<div className="task-meta">
+Notes: {note.notes}
+</div>
+}
+
+<div className="move-arrows">
+
+<button
+className="arrow-btn"
+onClick={moveLeft}
+disabled={index===0}
+>
+←
+</button>
+
+<button
+className="arrow-btn"
+onClick={moveRight}
+disabled={index===columns.length-1}
+>
+→
+</button>
+
+</div>
+
+<div className="card-actions">
+
+<button
+className="icon-btn"
+onClick={()=>setEditing(true)}
+>
+Edit
+</button>
+
+<button
+className="icon-btn"
+onClick={()=>onDelete(note.id)}
+>
+Delete
+</button>
+
+</div>
+
+</div>
+
+);
+
 }

@@ -1,35 +1,86 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 
-function Header({ filter, setFilter, sortBy, setSortBy }) {
-  return (
-    <header
-      style={{
-        padding: "16px 30px",
-        backgroundColor: "#0052cc",
-        display: "flex",
-        gap: "12px",
-        alignItems: "center",
-      }}
-    >
-      <h1 style={{ color: "white", margin: 0, flex: 1 }}>Kanban Board</h1>
-      <input
-        type="text"
-        placeholder="Search..."
-        value={filter}
-        onChange={(e) => setFilter(e.target.value)}
-        style={{ padding: "6px 10px", borderRadius: "4px", border: "none" }}
-      />
-      <select
-        value={sortBy}
-        onChange={(e) => setSortBy(e.target.value)}
-        style={{ padding: "6px 10px", borderRadius: "4px", border: "none" }}
-      >
-        <option value="">Default Order</option>
-        <option value="title">Sort by Title</option>
-        <option value="priority">Sort by Priority</option>
-      </select>
-    </header>
-  );
+export default function Header({filter,setFilter,sortBy,setSortBy}){
+
+const [open,setOpen]=useState(false);
+const [theme,setTheme]=useState("dark");
+
+const [tempFilter,setTempFilter]=useState(filter);
+const [tempSort,setTempSort]=useState(sortBy);
+
+useEffect(()=>{
+const current=document.body.getAttribute("data-theme") || "dark";
+setTheme(current);
+},[]);
+
+const toggleTheme=()=>{
+
+const newTheme=theme==="light"?"dark":"light";
+
+document.body.setAttribute("data-theme",newTheme);
+
+setTheme(newTheme);
+};
+
+const applySearch=()=>{
+setFilter(tempFilter);
+setSortBy(tempSort);
+setOpen(false);
+};
+
+return(
+
+<header>
+
+<button className="themeToggleBtn" onClick={toggleTheme}>
+{theme==="light" ? "🌙" : "☀️"}
+</button>
+
+<h1 className="header-title">
+Kanban Board
+</h1>
+
+<div className="search-container">
+
+<span
+className="search-icon"
+onClick={()=>setOpen(!open)}
+>
+🔍
+</span>
+
+{open &&(
+
+<div className="search-dropdown">
+
+<input
+placeholder="Search tasks"
+value={tempFilter}
+onChange={e=>setTempFilter(e.target.value)}
+/>
+
+<select
+value={tempSort}
+onChange={e=>setTempSort(e.target.value)}
+>
+<option value="">Sort none</option>
+<option value="title">Title</option>
+</select>
+
+<button
+className="ok-btn"
+onClick={applySearch}
+>
+OK
+</button>
+
+</div>
+
+)}
+
+</div>
+
+</header>
+
+);
 }
-
-export default Header;
