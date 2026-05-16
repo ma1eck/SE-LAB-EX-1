@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     defaults:
       run:
-        working-directory: ./frontend # Forces all commands to run inside the frontend folder
+        working-directory: ./frontend
 
     steps:
       - name: Checkout code
@@ -34,7 +34,7 @@ jobs:
           cache-dependency-path: ./frontend/package-lock.json
 
       - name: Install dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build project
         run: npm run build
@@ -42,7 +42,7 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ./frontend/dist # Change 'dist' if your build folder is named differently (e.g., 'build')
+          path: ./frontend/dist
 
   deploy:
     environment:
