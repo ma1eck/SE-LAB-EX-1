@@ -30,10 +30,7 @@ onDragOver={allowDrop}
 onDrop={drop}
 >
 
-<div className="column-header">
 <h3>{name}</h3>
-<span>{colNotes.length}</span>
-</div>
 
 {colNotes.map(note=>(
 

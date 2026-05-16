@@ -35,8 +35,6 @@ n.id===taskId ? {...n,type:newColumn} : n
 
 };
 
-/* GLOBAL ADD TASK */
-
 const addTask=()=>{
 
 const newTask={
