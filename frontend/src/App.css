@@ -13,9 +13,12 @@
 
 --button-bg:#1e293b;
 --button-text:#f8fafc;
+
+--priority-high:#ef4444;
+--priority-medium:#f59e0b;
+--priority-low:#22c55e;
 }
 
-/* LIGHT THEME */
 [data-theme="light"]{
 --bg:#f8fafc;
 --header:#ffffff;
@@ -54,8 +57,6 @@ margin:0;
 color:var(--text);
 }
 
-/* THEME BUTTON */
-
 .themeToggleBtn{
 position:absolute;
 left:20px;
@@ -68,7 +69,6 @@ border:1px solid var(--border);
 padding:6px 10px;
 border-radius:8px;
 cursor:pointer;
-
 font-size:18px;
 }
 
@@ -106,7 +106,6 @@ width:240px;
 .search-dropdown select{
 background:var(--bg);
 color:var(--text);
-
 border:1px solid var(--border);
 border-radius:6px;
 padding:8px;
@@ -160,7 +159,6 @@ color:white;
 border:none;
 border-radius:8px;
 padding:8px;
-
 cursor:pointer;
 }
 
@@ -173,6 +171,8 @@ border:1px solid var(--border);
 border-radius:10px;
 padding:14px;
 margin-bottom:12px;
+
+cursor:grab;
 }
 
 .task-title{
@@ -184,10 +184,42 @@ font-size:0.9rem;
 color:var(--text-muted);
 }
 
+/* PRIORITY */
+
+.priority{
+font-size:12px;
+padding:3px 8px;
+border-radius:6px;
+display:inline-block;
+margin-top:6px;
+}
+
+.priority-high{
+background:var(--priority-high);
+color:white;
+}
+
+.priority-medium{
+background:var(--priority-medium);
+color:white;
+}
+
+.priority-low{
+background:var(--priority-low);
+color:white;
+}
+
+/* DEADLINE */
+
 .task-meta{
 font-size:0.8rem;
 color:var(--text-muted);
 margin-top:6px;
+}
+
+.deadline-overdue{
+color:var(--priority-high);
+font-weight:600;
 }
 
 /* BUTTONS */
@@ -210,35 +242,6 @@ padding:4px 8px;
 cursor:pointer;
 }
 
-/* MOVE */
-
-.move-arrows{
-display:flex;
-justify-content:space-between;
-margin-top:10px;
-}
-
-.arrow-btn{
-background:var(--button-bg);
-color:var(--button-text);
-
-border:1px solid var(--border);
-border-radius:6px;
-
-padding:4px 10px;
-cursor:pointer;
-}
-
-.arrow-btn:hover{
-background:var(--accent);
-color:white;
-}
-
-.arrow-btn:disabled{
-opacity:0.3;
-cursor:not-allowed;
-}
-
 /* EDIT */
 
 .edit-input{
@@ -252,3 +255,33 @@ border:1px solid var(--border);
 background:var(--bg);
 color:var(--text);
 }
+/* GLOBAL ADD BUTTON */
+
+.global-add-btn{
+
+  position:fixed;
+  
+  bottom:25px;
+  left:50%;
+  transform:translateX(-50%);
+  
+  background:var(--accent);
+  color:white;
+  
+  border:none;
+  border-radius:14px;
+  
+  padding:16px 36px;
+  
+  font-size:18px;
+  font-weight:600;
+  
+  cursor:pointer;
+  
+  box-shadow:0 8px 20px rgba(0,0,0,0.25);
+  }
+  
+  .global-add-btn:hover{
+  transform:translateX(-50%) scale(1.05);
+  }
+  
