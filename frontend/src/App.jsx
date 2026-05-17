@@ -1,7 +1,7 @@
 import React,{useState,useEffect} from "react";
 import Header from "./Header";
 import Column from "./Column";
-import "./app.css";
+import "./App.css";
 
 function App(){
 
